@@ -91,7 +91,7 @@ describe( 'numberFormatCurrency()', () => {
 			currency: 'USD',
 			browserSafeLocale,
 		} );
-		expect( money ).toBe( '-$1,234.57' );
+		expect( money ).toBe( '\u2068-$1,234.57\u2069' );
 	} );
 
 	it( 'unknown currency codes return default', () => {
@@ -210,7 +210,7 @@ describe( 'numberFormatCurrency()', () => {
 			browserSafeLocale,
 			signForPositive: true,
 		} );
-		expect( money2 ).toBe( '+$9,800,900.00' );
+		expect( money2 ).toBe( '\u2068+$9,800,900.00\u2069' );
 	} );
 
 	it( 'returns a negative sign for negative numbers if signForPositive is true (USD)', () => {
@@ -219,7 +219,7 @@ describe( 'numberFormatCurrency()', () => {
 			currency: 'USD',
 			browserSafeLocale,
 		} );
-		expect( money ).toBe( '-$9,800,900.00' );
+		expect( money ).toBe( '\u2068-$9,800,900.00\u2069' );
 
 		const money2 = numberFormatCurrency( {
 			number: -9800900,
@@ -227,7 +227,7 @@ describe( 'numberFormatCurrency()', () => {
 			browserSafeLocale,
 			signForPositive: true,
 		} );
-		expect( money2 ).toBe( '-$9,800,900.00' );
+		expect( money2 ).toBe( '\u2068-$9,800,900.00\u2069' );
 	} );
 
 	it( 'returns a plus sign for positive numbers if signForPositive is true (EUR)', () => {
@@ -244,7 +244,7 @@ describe( 'numberFormatCurrency()', () => {
 			browserSafeLocale: 'de-DE',
 			signForPositive: true,
 		} );
-		expect( money2 ).toBe( '+9.800.900,00 €' );
+		expect( money2 ).toBe( '\u2068+9.800.900,00 €\u2069' );
 	} );
 
 	it( 'returns a number in latin numbers even for locales which default to other character sets', () => {

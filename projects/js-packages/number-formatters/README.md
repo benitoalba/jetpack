@@ -85,6 +85,8 @@ Since rounding errors are common in floating point math, sometimes a price is pr
 
 To show a fixed number of decimals instead of the currency's own (eg: a store's price decimals setting), pass `decimals`: `formatCurrency( 92, 'USD', { decimals: 0 } )` returns `$92`, and `formatCurrency( 92, 'JPY', { decimals: 2 } )` returns `¥92.00`. It takes an integer from 0 to 20 and ignores anything else, and it does not change how `isSmallestUnit` divides the amount. `getCurrencyObject()` takes the same option.
 
+When the amount has a sign (a negative number, or a positive one with `signForPositive`), the result is wrapped in Unicode bidi isolation characters, U+2068 and U+2069. Without them a right-to-left page can move the sign to the other side of the digits. They work like `<bdi>` and are invisible, so `formatCurrency( -5, 'USD' )` returns `'\u2068-$5.00\u2069'`. Pass `isolateDirection: false` to get the plain string, eg: when it will be parsed or compared rather than displayed.
+
 #### Notes
 
 - We always show `US$` for USD when the user's geolocation is not inside the US. This is important because other currencies use `$` for their currency and are surprised sometimes if they are actually charged in USD (which is the default for many users). We can't safely display `US$` for everyone because we've found that US users are confused by that style and it decreases confidence in the product.

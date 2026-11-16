@@ -1,0 +1,4 @@
+Significance: minor
+Type: fixed
+
+Currency: Keep the sign of a signed `formatCurrency()` amount on the correct side in right-to-left text. Use the new `isolateDirection: false` option to get the previous plain string.

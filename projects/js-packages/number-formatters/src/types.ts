@@ -98,6 +98,18 @@ export interface NumberFormatCurrencyParams {
 	signForPositive?: boolean;
 
 	/**
+	 * Only used by `formatCurrency()`. When the result has a sign (`-` or `+`),
+	 * it is wrapped in Unicode bidi isolation characters (U+2068 FIRST STRONG
+	 * ISOLATE ... U+2069 POP DIRECTIONAL ISOLATE) so a right-to-left page does
+	 * not move the sign to the other side of the digits. This is the plain-text
+	 * equivalent of `<bdi>`.
+	 *
+	 * Defaults to true. Set it to false where the string is not displayed as
+	 * text, eg: when it will be parsed or compared.
+	 */
+	isolateDirection?: boolean;
+
+	/**
 	 * Dynamic currency overrides, typically supplied by the host application
 	 * (eg: from a remote endpoint) via `setCurrencyOverrides`.
 	 *
@@ -181,6 +193,11 @@ export type GetCurrencyObject = (
 	currency: string,
 	options?: Omit<
 		NumberFormatCurrencyParams,
-		'number' | 'currency' | 'browserSafeLocale' | 'geoLocation' | 'currencyOverrides'
+		| 'number'
+		| 'currency'
+		| 'browserSafeLocale'
+		| 'geoLocation'
+		| 'currencyOverrides'
+		| 'isolateDirection'
 	>
 ) => CurrencyObject;

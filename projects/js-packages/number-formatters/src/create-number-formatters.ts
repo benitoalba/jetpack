@@ -110,13 +110,14 @@ export interface NumberFormatters {
 	 *
 	 * If `isSmallestUnit` is set and the number is not an integer, it will be
 	 * rounded to an integer.
-	 * @param  number                  - The number to format.
-	 * @param  currency                - The currency to format.
-	 * @param  options                 - The options for the formatter.
-	 * @param  options.stripZeros      - Whether to strip zeros.
-	 * @param  options.isSmallestUnit  - Whether the number is the smallest unit of a currency.
-	 * @param  options.signForPositive - Whether to show the sign for positive numbers.
-	 * @param  options.forceLatin      - Whether to force the latin locale.
+	 * @param  number                   - The number to format.
+	 * @param  currency                 - The currency to format.
+	 * @param  options                  - The options for the formatter.
+	 * @param  options.stripZeros       - Whether to strip zeros.
+	 * @param  options.isSmallestUnit   - Whether the number is the smallest unit of a currency.
+	 * @param  options.signForPositive  - Whether to show the sign for positive numbers.
+	 * @param  options.forceLatin       - Whether to force the latin locale.
+	 * @param  options.isolateDirection - Whether to wrap a signed result in bidi isolation characters.
 	 * @return {string} A formatted string.
 	 */
 	formatCurrency: FormatCurrency;
@@ -266,6 +267,7 @@ function createNumberFormatters(): NumberFormatters {
 			isSmallestUnit = false,
 			signForPositive = false,
 			forceLatin = true,
+			isolateDirection = true,
 		} = {}
 	): string => {
 		return numberFormatCurrency( {
@@ -279,6 +281,7 @@ function createNumberFormatters(): NumberFormatters {
 			geoLocation: geoLocationState,
 			forceLatin,
 			currencyOverrides: currencyOverridesState,
+			isolateDirection,
 		} );
 	};
 

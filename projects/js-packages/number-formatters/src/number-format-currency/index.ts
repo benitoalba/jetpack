@@ -6,6 +6,9 @@ import type { CurrencyOverride, CurrencyObject, NumberFormatCurrencyParams } fro
 
 const debug = debugFactory( 'number-formatters:number-format-currency' );
 
+const FIRST_STRONG_ISOLATE = '\u2068';
+const POP_DIRECTIONAL_ISOLATE = '\u2069';
+
 /**
  * Retrieves the currency override for a given currency.
  *
@@ -303,6 +306,7 @@ function prepareNumberForFormatting(
  * @param  params.geoLocation       - The geo location of the user.
  * @param  params.forceLatin        - Whether to force the latin locale.
  * @param  params.currencyOverrides - Dynamic per-currency overrides supplied by the host application.
+ * @param  params.isolateDirection  - Whether to wrap a signed result in bidi isolation characters.
  * @return {string} A formatted string.
  */
 const numberFormatCurrency = ( {
@@ -316,6 +320,7 @@ const numberFormatCurrency = ( {
 	geoLocation,
 	forceLatin,
 	currencyOverrides,
+	isolateDirection = true,
 }: NumberFormatCurrencyParams ) => {
 	const validCurrency = getValidCurrency( currency, geoLocation, currencyOverrides );
 	const currencyOverride = getCurrencyOverride( validCurrency, geoLocation, currencyOverrides );
@@ -351,17 +356,28 @@ const numberFormatCurrency = ( {
 	} );
 	const parts = formatter.formatToParts( numberAsFloat );
 
-	return parts.reduce( ( formatted, part ) => {
+	const formatted = parts.reduce( ( result, part ) => {
 		switch ( part.type ) {
 			case 'currency':
 				if ( currencyOverride?.symbol ) {
-					return formatted + currencyOverride.symbol;
+					return result + currencyOverride.symbol;
 				}
-				return formatted + part.value;
+				return result + part.value;
 			default:
-				return formatted + part.value;
+				return result + part.value;
 		}
 	}, '' );
+
+	const hasSign = parts.some( part => part.type === 'minusSign' || part.type === 'plusSign' );
+	if ( isolateDirection && hasSign ) {
+		// A sign is a weak bidi character, so a right-to-left context can move it
+		// to the other side of the digits. First-strong isolation keeps the amount
+		// in its own direction, like `<bdi>`, while letting an RTL locale's own
+		// direction marks decide that direction.
+		return FIRST_STRONG_ISOLATE + formatted + POP_DIRECTIONAL_ISOLATE;
+	}
+
+	return formatted;
 };
 
 /**

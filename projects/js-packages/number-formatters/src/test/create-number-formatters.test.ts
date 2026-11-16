@@ -192,6 +192,20 @@ describe( 'createNumberFormatters()', () => {
 				} );
 			} );
 		} );
+
+		describe( 'isolateDirection', () => {
+			it.each( [
+				[ 'en', -5, {}, '\u2068-$5.00\u2069' ],
+				[ 'en', -5, { isolateDirection: false }, '-$5.00' ],
+				[ 'en', 0, { signForPositive: true }, '$0.00' ],
+				// The locale's own direction marks stay inside the isolate.
+				[ 'he', -5, {}, '\u2068\u200f\u200e-5.00 \u200f$\u2069' ],
+			] )( 'in %s formats %s with %o as %j', ( locale, number, options, expected ) => {
+				const formatters = createNumberFormatters();
+				formatters.setLocale( locale );
+				expect( formatters.formatCurrency( number, 'USD', options ) ).toBe( expected );
+			} );
+		} );
 	} );
 
 	describe( 'getCurrencyObject()', () => {
